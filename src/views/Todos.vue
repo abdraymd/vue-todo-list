@@ -47,9 +47,7 @@ export default {
 		}
 	},
 	mounted() {
-		if (this.getAllTodos.length) return
-
-		this.fetchTodos()
+		if (!this.getAllTodos.length) this.fetchTodos()
 	},
 	methods: {
 		...mapActions(['fetchTodos']),

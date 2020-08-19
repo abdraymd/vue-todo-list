@@ -32,8 +32,12 @@ export default {
 				.then(snapshot => {
 					let todos = []
 					snapshot.forEach(doc => {
-						let todo = doc.data()
-						todo.id = doc.id
+						let todo = {
+							id: doc.id,
+							title: doc.data().title,
+							completed: doc.data().completed,
+							createdAt: doc.data().createdAt.toDate()
+						}
 
 						todos.push(todo)
 					})
@@ -72,7 +76,7 @@ export default {
 				.update({
 					title: todo.title,
 					completed: !todo.completed,
-					createdAt: todo.createdAt
+					createdAt: new Date(todo.createdAt)
 				})
 				.then(function() {
 					context.commit('updateCompleted', todo.id)
@@ -84,7 +88,7 @@ export default {
 				.update({
 					title: todo.title,
 					completed: todo.completed,
-					createdAt: todo.createdAt
+					createdAt: new Date(todo.createdAt)
 				})
 				.then(function() {
 					context.commit('updateTodo', todo)
@@ -118,7 +122,7 @@ export default {
 		updateTodo(state, todo) {
 			for (let i in state.todos) {
 				if (state.todos[i].id === todo.id) {
-					state.todos[i] = todo
+					state.todos.splice(i, 1, todo)
 					break
 				}
 			}

@@ -2,7 +2,7 @@
 	<li>
 		<div>
 			<input type="checkbox" :checked="todo.completed" @change="checkTodo(todo)" />
-			<span :class="{ done: todo.completed }">{{ todo.title }}</span>
+			<label :class="{ done: todo.completed }">{{ todo.title }}</label>
 		</div>
 
 		<div>
