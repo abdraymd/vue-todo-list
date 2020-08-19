@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
 	data() {
@@ -15,16 +15,10 @@ export default {
 		}
 	},
 	methods: {
-		...mapMutations(['addTodo']),
+		...mapActions(['createTodoInDb']),
 		onSubmit() {
 			if (this.title.trim()) {
-				const newTodo = {
-					id: Date.now(),
-					title: this.title,
-					completed: false
-				}
-
-				this.addTodo(newTodo)
+				this.createTodoInDb(this.title.trim())
 				this.title = ''
 			}
 		}

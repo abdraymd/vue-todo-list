@@ -1,25 +1,34 @@
 <template>
 	<li>
 		<div>
-			<input type="checkbox" :checked="todo.completed" @change="todo.completed = !todo.completed" />
+			<input type="checkbox" :checked="todo.completed" @change="checkTodo(todo)" />
 			<span :class="{ done: todo.completed }">{{ todo.title }}</span>
 		</div>
 
-		<button @click="deleteItem(todo.id)">&times;</button>
+		<div>
+			<button @click="goToTodoEdit(todo.id)">&#9998;</button>
+			<button @click="deleteTodo(todo.id)">&times;</button>
+		</div>
 	</li>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
 	props: {
 		todo: Object
 	},
 	methods: {
-		...mapMutations(['deleteTodo']),
-		deleteItem(todoId) {
-			this.deleteTodo(todoId)
+		...mapActions(['deleteTodoFromDb', 'updateCompletedInDb']),
+		deleteTodo(todoId) {
+			this.deleteTodoFromDb(todoId)
+		},
+		checkTodo(todo) {
+			this.updateCompletedInDb(todo)
+		},
+		goToTodoEdit(todoId) {
+			this.$router.push(`/todos/edit/` + todoId)
 		}
 	}
 }

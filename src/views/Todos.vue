@@ -3,7 +3,7 @@
 		<p>{{ todosCount }}</p>
 		<TodoAdd />
 		<Selector :filter="todosFilter" :options="todosFilterOptions" @change-filter="changeFilter" />
-		<Loader v-if="loading" />
+		<Loader v-if="isLoading" />
 		<TodoList v-else-if="filteredTodos.length" :todos="filteredTodos" />
 		<p v-else>No todos</p>
 	</div>
@@ -27,29 +27,29 @@ export default {
 	data() {
 		return {
 			todosFilter: 'all',
-			todosFilterOptions: ['all', 'completed', 'incompleted'],
-			loading: true
+			todosFilterOptions: ['all', 'completed', 'incompleted']
 		}
 	},
 	computed: {
-		...mapGetters(['allTodos', 'todosCount']),
+		...mapGetters(['getAllTodos', 'todosCount', 'isLoading']),
 		filteredTodos() {
 			if (this.todosFilter === 'all') {
-				return this.allTodos
+				return this.getAllTodos
 			}
 
 			if (this.todosFilter === 'completed') {
-				return this.allTodos.filter(todo => todo.completed)
+				return this.getAllTodos.filter(todo => todo.completed)
 			}
 
 			if (this.todosFilter === 'incompleted') {
-				return this.allTodos.filter(todo => !todo.completed)
+				return this.getAllTodos.filter(todo => !todo.completed)
 			}
 		}
 	},
-	async mounted() {
+	mounted() {
+		if (this.getAllTodos.length) return
+
 		this.fetchTodos()
-		this.loading = false
 	},
 	methods: {
 		...mapActions(['fetchTodos']),
