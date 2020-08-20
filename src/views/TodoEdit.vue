@@ -1,10 +1,13 @@
 <template>
-	<div>
-		<p v-if="!todo">No todo</p>
-		<form @submit.prevent="onSubmit">
-			<input type="text" v-model="newTitle" />
-			<button type="submit">Update</button>
-			<button @click="goToTodos()">Cancel</button>
+	<div class="todos-header">
+		<h3 class="header-3">Изменение действия</h3>
+		<p v-if="!todo">Действие не существует</p>
+		<form @submit.prevent="onSubmit" class="form" v-else>
+			<div class="form-group">
+				<input type="text" class="input-text" v-model="newTitle" />
+				<button type="submit" class="btn-block btn-submit">Редактировать</button>
+			</div>
+			<button @click="goToTodos()" class="btn-block btn-cancel">Отменить</button>
 		</form>
 	</div>
 </template>
@@ -49,16 +52,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-form {
-	display: flex;
-	width: 500px;
+.input-text {
+	margin-right: 20px;
 
-	input {
-		width: 100%;
+	@media screen and (max-width: 600px) {
+		margin-right: 0;
+		margin-bottom: 20px;
 	}
+}
 
-	button {
-		width: 100px;
-	}
+.btn-cancel {
+	margin-top: 15px;
 }
 </style>

@@ -15,52 +15,57 @@ export default {
 				return state.todos.find(todo => todo.id === todoId)
 			}
 		},
-		todosCount(state) {
-			return state.todos.length
-		},
 		isLoading(state) {
 			return state.loading
 		}
 	},
 	actions: {
 		fetchTodos(context) {
-			context.commit('setLoading', true)
+			return new Promise((resolve, reject) => {
+				context.commit('setLoading', true)
 
-			db.collection('todos')
-				.orderBy('createdAt', 'desc')
-				.get()
-				.then(snapshot => {
-					let todos = []
-					snapshot.forEach(doc => {
-						let todo = {
-							id: doc.id,
-							title: doc.data().title,
-							completed: doc.data().completed,
-							createdAt: doc.data().createdAt.toDate()
-						}
+				db.collection('todos')
+					.orderBy('createdAt', 'desc')
+					.get()
+					.then(snapshot => {
+						let todos = []
+						snapshot.forEach(doc => {
+							let todo = {
+								id: doc.id,
+								title: doc.data().title,
+								completed: doc.data().completed,
+								createdAt: doc.data().createdAt.toDate()
+							}
 
-						todos.push(todo)
+							todos.push(todo)
+						})
+
+						context.commit('updateTodos', todos)
+						context.commit('setLoading', false)
+
+						resolve()
 					})
-
-					context.commit('updateTodos', todos)
-					context.commit('setLoading', false)
-				})
+			})
 		},
 		createTodoInDb(context, title) {
-			const newTodo = {
-				title: title,
-				completed: false,
-				createdAt: new Date()
-			}
+			return new Promise((resolve, reject) => {
+				const newTodo = {
+					title: title,
+					completed: false,
+					createdAt: new Date()
+				}
 
-			db.collection('todos')
-				.add(newTodo)
-				.then(function(ref) {
-					context.commit('addTodo', {
-						id: ref.id,
-						...newTodo
+				db.collection('todos')
+					.add(newTodo)
+					.then(function(ref) {
+						context.commit('addTodo', {
+							id: ref.id,
+							...newTodo
+						})
+
+						resolve()
 					})
-				})
+			})
 		},
 		deleteTodoFromDb(context, todoId) {
 			db.collection('todos')

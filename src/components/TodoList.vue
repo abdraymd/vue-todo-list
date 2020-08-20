@@ -1,7 +1,9 @@
 <template>
-	<div>
+	<div class="todo-list">
 		<ul>
-			<TodoItem v-for="(todo, index) in todos" :key="index" :todo="todo" />
+			<li>
+				<TodoItem v-for="(todo, index) in todos" :key="index" :todo="todo" />
+			</li>
 		</ul>
 	</div>
 </template>
@@ -20,9 +22,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
+.todo-list {
+	margin-bottom: 20px;
 }
 </style>

@@ -1,7 +1,9 @@
 <template>
-	<form @submit.prevent="onSubmit">
-		<input type="text" v-model="title" />
-		<button type="submit">Add</button>
+	<form @submit.prevent="onSubmit" class="form">
+		<div class="form-group">
+			<input type="text" class="input-text" v-model="title" placeholder="Новое действие..." />
+			<button type="submit" class="btn-block btn-submit">Добавить</button>
+		</div>
 	</form>
 </template>
 
@@ -18,8 +20,14 @@ export default {
 		...mapActions(['createTodoInDb']),
 		onSubmit() {
 			if (this.title.trim()) {
-				this.createTodoInDb(this.title.trim())
-				this.title = ''
+				this.createTodoInDb(this.title.trim()).then(() => {
+					this.title = ''
+
+					if (+this.$route.query.page !== 1) {
+						this.$parent.changePage(1)
+						this.$router.go()
+					}
+				})
 			}
 		}
 	}
@@ -27,16 +35,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-form {
-	display: flex;
-	width: 500px;
+.input-text {
+	margin-right: 20px;
 
-	input {
-		width: 100%;
-	}
-
-	button {
-		width: 100px;
+	@media screen and (max-width: 600px) {
+		margin-right: 0;
+		margin-bottom: 20px;
 	}
 }
 </style>
